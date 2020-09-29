@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+  {% block title %}
+     {{ category|capfirst }} | DapJak
+  {% endblock %}
+{% block body %}
+<body>
+  <div class="container py-5">
+    <div class="row">
+    <div class="col-lg-8 col-12 m-0 p-0">
+
+      {% for posts in posts|slice:":5" %}
+        <div class="container-fluid bg-white mb-4 border border-custom" id="{{ posts.id }}">
+          <div class="containers" onclick="location.href='{{posts.get_absolute_url}}';" style="cursor: pointer;">
+
+            {% if posts.cover_image %}
+            <img src="{{ posts.cover_image.url }}" class="jumbotron2">
+            <div style="text-align: center; width: 100%;">
+            <small class="text-muted" >{{ posts.credit }}</small>
+            </div>
+            {% endif %}
+            <h5 class="mt-2">{{ posts.title }}</h5>
+            <p class="text-muted">{{ posts.sub_title }}</p>
+        </div>
+        <div>
+          <p class="post-detail-author p-0 m-0 ml-1">{{ posts.author.first_name }}</p>
+          <a class="post-detail-author p-0 m-0 ml-1" href="#" style="font-weight: 400;">@{{ posts.author }}</a>
+          <small class="text-muted">{{ posts.date_posted|date:"M d" }}</small>
+        </div>
+
+        <!-- Buttons for share and like -->
+        <div class="dropdown flex-box">
+          <button style="background: white; border: none; font-size: 20px; color: #282828;" id="dropdownMenuButton" data-toggle="dropdown"><i class="fas fa-angle-down"></i></button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+          {% if posts.author ==  request.user %}
+            <ul class="m-0 p-0"><a href="{% url 'blog:post-update' pk=posts.id slug=posts.slug %}" class="dropdown-item">Update</a></ul>
+            <ul class="m-0 p-0"><a href="{% url 'blog:post-delete' pk=posts.id slug=posts.slug %}" class="dropdown-item">Delete</a></ul>
+          {% else %}
+            <ul class="m-0 p-0"><a href="" class="class_reportuser dropdown-item" id="{{ posts.id }}">Report Article</a></ul>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+
+      <!--  -->
+
+    <div class="col-lg-4 col-12 m-0 p-0 pl-4" id="div_sidebox">
+
+        {% for post in post|slice:":5" %}
+        <div class="container-fluid p-0" id="sidebox" onclick="location.href='{{post.get_absolute_url}}';" style="cursor: pointer;">
+          {% if post.id != posts.id %}
+
+          <div class="mb-4 border border-custom">
+
+
+            {% if posts.cover_image %}
+              <img src="{{ post.cover_image.url }}" class="img-fluid" height="100%" width="100%">
+            {% endif %}
+            <h6 class="ml-2 mt-1">{{ post.title }}</h6>
+
+            <div class="bg-white pt-1 px-2">
+                   <p class="mb-n1 pb-0" style="font-size:13px;">{{ post.author.first_name }} <span><a href='{% url "blog:user-posts" post.author %}' style="font-size: 14px;">@{{ post.author }}</a>
+                   </span>
+                   </p>
+                   <small class="text-muted pt-nr">{{ post.date_posted|date:"M d" }}</small>
+
+
+
+           </div>
+           </div>
+
+            {% endif %}
+        </div>
+
+        {% endfor %}
+      </div>
+
+
+
+
+    </div>
+    </div>
+
+</body>
+
+{% endblock %}

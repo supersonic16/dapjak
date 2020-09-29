@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+  Register
+{% endblock %}
+{% block body %}
+<body id="bg" style="background-image: url('https://dapjakbucket.s3.ap-south-1.amazonaws.com/bg-image.jpg');">
+
+  <div class="container p-4">
+    <div class="row">
+      <div class="col-lg-3 col-md-2"></div>
+      <div class="col-lg-6 col-md-8 col-sm-12 col-12 bg-white">
+        <center class="pt-5"><h2>DAPJAK</h2></center>
+    <form class="text-center border border-light p-5" action="" method="POST">
+      {% csrf_token %}
+      {{ form|crispy }}
+
+      <button class="btn btn-info btn-block" type="submit">Sign up</button>
+    </form>
+    </div>
+    <div class="col-lg-3 col-md-2"></div>
+    </div>
+  </div>
+</body>
+
+{% block javascript %}
+<script>
+  $("#id_username").change(function () {
+    var username = $(this).val();
+
+  $.ajax({
+    url: '{% url "validate_username" %}',
+    data: {
+      'username': username
+    },
+    dataType: 'json',
+    success: function (result){
+      if (result.is_taken){
+        alert("A user with this username already exists.");
+      }
+    }
+  })
+});
+</script>
+{% endblock %}
+
+{% endblock %}
